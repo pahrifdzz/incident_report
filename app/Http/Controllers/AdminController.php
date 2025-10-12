@@ -3,27 +3,51 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Exports\ReportsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
+/**
+ * AdminController - Handle semua fungsi admin dashboard
+ * Clean Architecture: Single responsibility untuk admin operations
+ */
 class AdminController extends Controller
 {
     /**
-     * Menampilkan semua laporan di dashboard admin.
+     * Menampilkan dashboard admin dengan semua laporan
+     * Clean Code: Clear method name, proper error handling
      */
     public function index()
     {
         try {
-            // Ambil semua laporan terbaru dari database
-            $reports = Report::orderBy('created_at', 'desc')->get();
+            // Debug: Log sebelum mengambil data
+            Log::info('AdminController::index - Starting data fetch');
 
-            Log::info('Jumlah laporan ditampilkan di dashboard: ' . $reports->count());
+            // Ambil semua laporan terbaru dari database dengan pagination
+            $reports = Report::orderBy('created_at', 'desc')->paginate(10);
 
-            // Tampilkan halaman dashboard admin
-            return view('admin.dashboard', compact('reports'));
+            // Debug: Log data yang diambil
+            Log::info('AdminController::index - Reports fetched', [
+                'count' => $reports->count(),
+                'total' => $reports->total(),
+                'current_page' => $reports->currentPage(),
+                'per_page' => $reports->perPage()
+            ]);
+
+            // Debug: Log sample data
+            if ($reports->count() > 0) {
+                Log::info('AdminController::index - Sample report data', [
+                    'first_report' => $reports->first()->nama_pelapor,
+                    'first_status' => $reports->first()->status
+                ]);
+            }
+
+            return view('admin.simple-dashboard', compact('reports'));
         } catch (\Exception $e) {
-            Log::error('Gagal memuat dashboard admin: ' . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan saat memuat dashboard.');
+            Log::error('AdminController::index - Error: ' . $e->getMessage());
+            Log::error('AdminController::index - Stack trace: ' . $e->getTraceAsString());
+            return back()->with('error', 'Terjadi kesalahan saat memuat dashboard: ' . $e->getMessage());
         }
     }
 
@@ -58,6 +82,27 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             Log::error('Gagal memperbarui status laporan: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat memperbarui status.');
+        }
+    }
+
+    /**
+     * Export reports data ke Excel
+     * Clean Code: Clear method name, proper error handling
+     */
+    public function exportExcel()
+    {
+        try {
+            // Log export activity
+            Log::info('Admin export Excel - Reports data exported');
+
+            // Generate filename dengan timestamp
+            $filename = 'reports_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+
+            // Export data ke Excel
+            return Excel::download(new ReportsExport, $filename);
+        } catch (\Exception $e) {
+            Log::error('Admin export Excel error: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat export data. Silakan coba lagi.');
         }
     }
 }
