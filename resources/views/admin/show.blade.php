@@ -101,14 +101,17 @@
                         </div>
                     </div>
 
-                    <!-- Photo if exists -->
+                    <!-- Photo if exists - Cloudinary optimized -->
                     @if ($report->foto)
                         <div class="mt-6">
                             <label class="block text-sm font-medium text-gray-600 mb-2">Foto Pendukung</label>
                             <div class="bg-gray-50 p-4 rounded-md">
-                                <img src="{{ asset('storage/' . $report->foto) }}" alt="Foto kejadian"
-                                    class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 300px;">
+                                <img src="{{ $report->foto }}" alt="Foto kejadian"
+                                    class="max-w-full h-auto rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                    style="max-width: 300px;" onclick="openImageModal('{{ $report->foto }}')"
+                                    loading="lazy">
                             </div>
+                            <p class="text-xs text-gray-500 mt-2">Klik gambar untuk melihat ukuran penuh</p>
                         </div>
                     @endif
                 </div>
@@ -150,6 +153,52 @@
             </div>
         </div>
     </div>
+
+    <!-- Image Modal untuk preview foto -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-4xl max-h-full overflow-hidden">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Preview Foto</h3>
+                <button onclick="closeImageModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4">
+                <img id="modalImage" src="" alt="Preview" class="max-w-full h-auto rounded-lg">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Image modal functions
+        function openImageModal(imageUrl) {
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('imageModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    </script>
 </body>
 
 </html>

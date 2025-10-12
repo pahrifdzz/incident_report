@@ -116,10 +116,22 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Foto Pendukung
                                     (Opsional)</label>
-                                <input type="file" name="foto" accept="image/*"
-                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
-                                <p class="text-xs text-gray-500 mt-1">Format yang didukung: JPG, PNG, GIF. Maksimal 5MB
-                                </p>
+                                <input type="file" name="foto" accept="image/*" id="fotoInput"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                                    onchange="previewImage(this)">
+                                <p class="text-xs text-gray-500 mt-1">Format yang didukung: JPG, PNG, GIF, WEBP.
+                                    Maksimal 5MB</p>
+
+                                <!-- Image Preview -->
+                                <div id="imagePreview" class="mt-3 hidden">
+                                    <label class="block text-sm font-medium text-gray-600 mb-2">Preview:</label>
+                                    <div class="bg-gray-50 p-3 rounded-md">
+                                        <img id="previewImg" src="" alt="Preview"
+                                            class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 200px;">
+                                        <button type="button" onclick="removeImage()"
+                                            class="mt-2 text-xs text-red-600 hover:text-red-800">Hapus Preview</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -135,6 +147,52 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Image preview functionality
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Remove image preview
+        function removeImage() {
+            document.getElementById('fotoInput').value = '';
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('previewImg').src = '';
+        }
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const fotoInput = document.getElementById('fotoInput');
+
+            if (fotoInput.files && fotoInput.files[0]) {
+                const file = fotoInput.files[0];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (file.size > maxSize) {
+                    e.preventDefault();
+                    alert('Ukuran file terlalu besar. Maksimal 5MB.');
+                    return false;
+                }
+
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    e.preventDefault();
+                    alert('Format file tidak didukung. Gunakan JPG, PNG, GIF, atau WEBP.');
+                    return false;
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>

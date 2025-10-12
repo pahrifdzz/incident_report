@@ -18,6 +18,7 @@ class Report extends Model
         'nik',
         'keterangan',
         'foto',
+        'cloudinary_public_id', // Tambahkan field untuk Cloudinary public ID
         'status',
     ];
 }
