@@ -22,13 +22,14 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validation rules dengan update untuk Cloudinary
+            // Validation rules dengan update untuk Cloudinary dan status_kejadian
             $request->validate([
                 'nama_pelapor' => 'required|string|max:255',
                 'nomor_whatsapp' => 'required|string|max:20',
                 'departemen' => 'required|string|max:255',
                 'nik' => 'required|string|max:50',
                 'keterangan' => 'required|string',
+                'status_kejadian' => 'required|in:hampir_celaka,kecelakaan', // Validasi status kejadian
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
             ]);
 
@@ -56,13 +57,14 @@ class ReportController extends Controller
                 }
             }
 
-            // Create report dengan Cloudinary URL
+            // Create report dengan Cloudinary URL dan status_kejadian
             $report = Report::create([
                 'nama_pelapor' => $request->nama_pelapor,
                 'nomor_whatsapp' => $request->nomor_whatsapp,
                 'departemen' => $request->departemen,
                 'nik' => $request->nik,
                 'keterangan' => $request->keterangan,
+                'status_kejadian' => $request->status_kejadian, // Store status kejadian
                 'foto' => $cloudinaryUrl, // Store Cloudinary URL instead of local path
                 'cloudinary_public_id' => $cloudinaryPublicId, // Store public ID for future operations
                 'status' => 'baru',

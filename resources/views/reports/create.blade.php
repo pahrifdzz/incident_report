@@ -98,6 +98,17 @@
                                         required>
                                 </div>
                             </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Status Kejadian *</label>
+                                <select name="status_kejadian"
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                                    required>
+                                    <option value="">Pilih Status Kejadian</option>
+                                    <option value="hampir_celaka">Hampir Celaka</option>
+                                    <option value="kecelakaan">Kecelakaan</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Incident Details Section -->
@@ -114,11 +125,10 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 mb-1">Foto Pendukung
-                                    (Opsional)</label>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Foto Pendukung *</label>
                                 <input type="file" name="foto" accept="image/*" id="fotoInput"
                                     class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                                    onchange="previewImage(this)">
+                                    onchange="previewImage(this)" required>
                                 <p class="text-xs text-gray-500 mt-1">Format yang didukung: JPG, PNG, GIF, WEBP.
                                     Maksimal 5MB</p>
 

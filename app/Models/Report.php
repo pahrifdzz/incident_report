@@ -17,6 +17,7 @@ class Report extends Model
         'departemen',
         'nik',
         'keterangan',
+        'status_kejadian', // Tambahkan field untuk status kejadian
         'foto',
         'cloudinary_public_id', // Tambahkan field untuk Cloudinary public ID
         'status',

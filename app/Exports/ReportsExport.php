@@ -21,10 +21,13 @@ class ReportsExport implements FromCollection, WithHeadings, WithMapping, WithSt
     /**
      * Ambil semua data reports untuk export
      * Clean Code: Clear method name, proper data handling
+     * Optimized: Sort by newest data first dengan multiple criteria
      */
     public function collection()
     {
-        return Report::orderBy('created_at', 'desc')->get();
+        return Report::orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->get();
     }
 
     /**
@@ -39,6 +42,7 @@ class ReportsExport implements FromCollection, WithHeadings, WithMapping, WithSt
             'Nomor WhatsApp',
             'Departemen',
             'NIK',
+            'Status Kejadian',
             'Status',
             'Keterangan',
             'Tanggal Laporan',
@@ -49,15 +53,21 @@ class ReportsExport implements FromCollection, WithHeadings, WithMapping, WithSt
     /**
      * Mapping data untuk setiap row
      * Clean Code: Transform data sesuai kebutuhan Excel
+     * Optimized: Use sequential numbering instead of database ID
      */
     public function map($report): array
     {
+        // Get the current row index untuk sequential numbering
+        static $rowIndex = 0;
+        $rowIndex++;
+
         return [
-            $report->id,
+            $rowIndex, // Sequential number (1, 2, 3, ...)
             $report->nama_pelapor,
             $report->nomor_whatsapp,
             $report->departemen,
             "'" . $report->nik, // Prefix dengan ' untuk memastikan NIK sebagai text
+            ucfirst(str_replace('_', ' ', $report->status_kejadian ?? 'Belum ada status')),
             ucfirst($report->status ?? 'Belum ada status'),
             $report->keterangan,
             $report->created_at ? \Carbon\Carbon::parse($report->created_at)->translatedFormat('d M Y, H:i') : '-',
@@ -98,10 +108,11 @@ class ReportsExport implements FromCollection, WithHeadings, WithMapping, WithSt
             'C' => 18,  // Nomor WhatsApp
             'D' => 15,  // Departemen
             'E' => 18,  // NIK
-            'F' => 12,  // Status
-            'G' => 30,  // Keterangan
-            'H' => 20,  // Tanggal Laporan
-            'I' => 15,  // Foto Pendukung
+            'F' => 15,  // Status Kejadian
+            'G' => 12,  // Status
+            'H' => 30,  // Keterangan
+            'I' => 20,  // Tanggal Laporan
+            'J' => 15,  // Foto Pendukung
         ];
     }
 

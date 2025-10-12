@@ -25,6 +25,7 @@ class ReportSeeder extends Seeder
                 'departemen' => 'IT Department',
                 'nik' => '1234567890123456',
                 'keterangan' => 'Laporan kerusakan komputer di ruang server. Komputer tidak bisa boot dan mengeluarkan suara beep.',
+                'status_kejadian' => 'hampir_celaka',
                 'status' => 'baru',
             ],
             [
@@ -33,6 +34,7 @@ class ReportSeeder extends Seeder
                 'departemen' => 'HR Department',
                 'nik' => '1234567890123457',
                 'keterangan' => 'Laporan kehilangan dokumen penting. Dokumen kontrak karyawan hilang dari filing cabinet.',
+                'status_kejadian' => 'kecelakaan',
                 'status' => 'proses',
             ],
             [
@@ -41,6 +43,7 @@ class ReportSeeder extends Seeder
                 'departemen' => 'Finance Department',
                 'nik' => '1234567890123458',
                 'keterangan' => 'Laporan masalah sistem payroll. Gaji karyawan tidak terhitung dengan benar.',
+                'status_kejadian' => 'hampir_celaka',
                 'status' => 'selesai',
             ],
             [
@@ -49,6 +52,7 @@ class ReportSeeder extends Seeder
                 'departemen' => 'Marketing Department',
                 'nik' => '1234567890123459',
                 'keterangan' => 'Laporan masalah printer. Printer tidak bisa mencetak dokumen dengan benar.',
+                'status_kejadian' => 'kecelakaan',
                 'status' => 'baru',
             ],
             [
@@ -57,6 +61,7 @@ class ReportSeeder extends Seeder
                 'departemen' => 'Operations Department',
                 'nik' => '1234567890123460',
                 'keterangan' => 'Laporan masalah jaringan internet. Koneksi internet sering putus-putus.',
+                'status_kejadian' => 'hampir_celaka',
                 'status' => 'proses',
             ],
         ];

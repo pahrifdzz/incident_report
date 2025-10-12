@@ -73,6 +73,17 @@
                         <!-- Report Details -->
                         <div class="space-y-4">
                             <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Status Kejadian</label>
+                                <span
+                                    class="inline-block px-3 py-1 text-xs font-medium rounded-full
+                                    @if ($report->status_kejadian == 'hampir_celaka') bg-yellow-100 text-yellow-800
+                                    @elseif($report->status_kejadian == 'kecelakaan') bg-red-100 text-red-800
+                                    @else bg-gray-100 text-gray-600 @endif">
+                                    {{ ucfirst(str_replace('_', ' ', $report->status_kejadian ?? 'Belum ada status')) }}
+                                </span>
+                            </div>
+
+                            <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Status Saat Ini</label>
                                 <span
                                     class="inline-block px-3 py-1 text-xs font-medium rounded-full
