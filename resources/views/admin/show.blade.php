@@ -113,14 +113,39 @@
                     </div>
 
                     <!-- Photo if exists - Cloudinary optimized -->
-                    @if ($report->foto)
+                    @if ($report->foto || $report->foto_sebelum || $report->foto_sesudah)
                         <div class="mt-6">
-                            <label class="block text-sm font-medium text-gray-600 mb-2">Foto Pendukung</label>
-                            <div class="bg-gray-50 p-4 rounded-md">
-                                <img src="{{ $report->foto }}" alt="Foto kejadian"
-                                    class="max-w-full h-auto rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                                    style="max-width: 300px;" onclick="openImageModal('{{ $report->foto }}')"
-                                    loading="lazy">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">Foto Kejadian</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                @if ($report->foto_sebelum)
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <h5 class="text-xs font-medium text-gray-700 mb-2">Sebelum Kejadian</h5>
+                                        <img src="{{ $report->foto_sebelum }}" alt="Foto sebelum kejadian"
+                                            class="max-w-full h-auto rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                            style="max-width: 200px;" onclick="openImageModal('{{ $report->foto_sebelum }}')"
+                                            loading="lazy">
+                                    </div>
+                                @endif
+
+                                @if ($report->foto)
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <h5 class="text-xs font-medium text-gray-700 mb-2">Foto Pelapor</h5>
+                                        <img src="{{ $report->foto }}" alt="Foto kejadian"
+                                            class="max-w-full h-auto rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                            style="max-width: 200px;" onclick="openImageModal('{{ $report->foto }}')"
+                                            loading="lazy">
+                                    </div>
+                                @endif
+
+                                @if ($report->foto_sesudah)
+                                    <div class="bg-gray-50 p-4 rounded-md">
+                                        <h5 class="text-xs font-medium text-gray-700 mb-2">Sesudah Kejadian</h5>
+                                        <img src="{{ $report->foto_sesudah }}" alt="Foto sesudah kejadian"
+                                            class="max-w-full h-auto rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                            style="max-width: 200px;" onclick="openImageModal('{{ $report->foto_sesudah }}')"
+                                            loading="lazy">
+                                    </div>
+                                @endif
                             </div>
                             <p class="text-xs text-gray-500 mt-2">Klik gambar untuk melihat ukuran penuh</p>
                         </div>
@@ -135,7 +160,60 @@
                 </div>
 
                 <div class="p-6">
-                    <form action="{{ route('admin.reports.status', $report->id) }}" method="POST" class="space-y-4">
+                    <!-- Success Message -->
+                    @if (session('success'))
+                        <div class="mb-6 p-4 bg-green-100 border border-green-200 rounded-md">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <span class="text-green-500">✓</span>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-green-800">{{ session('success') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Preview Uploaded Photos -->
+                    @if ($report->foto_sebelum || $report->foto_sesudah)
+                        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                            <h4 class="text-sm font-medium text-blue-800 mb-3">Foto Penanganan yang Telah Diupload:</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @if ($report->foto_sebelum)
+                                    <div class="bg-white p-3 rounded-md border border-blue-200">
+                                        <h5 class="text-xs font-medium text-blue-700 mb-2">Foto Sebelum Kejadian</h5>
+                                        <div class="relative">
+                                            <img src="{{ $report->foto_sebelum }}" alt="Foto sebelum kejadian"
+                                                class="max-w-full h-auto rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                                                style="max-width: 200px;" onclick="openImageModal('{{ $report->foto_sebelum }}')">
+                                            <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                                                Thumbnail
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Klik untuk memperbesar</p>
+                                    </div>
+                                @endif
+
+                                @if ($report->foto_sesudah)
+                                    <div class="bg-white p-3 rounded-md border border-blue-200">
+                                        <h5 class="text-xs font-medium text-blue-700 mb-2">Foto Sesudah Kejadian</h5>
+                                        <div class="relative">
+                                            <img src="{{ $report->foto_sesudah }}" alt="Foto sesudah kejadian"
+                                                class="max-w-full h-auto rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                                                style="max-width: 200px;" onclick="openImageModal('{{ $report->foto_sesudah }}')">
+                                            <div class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                                                Thumbnail
+                                            </div>
+                                        </div>
+                                        <p class="text-xs text-gray-500 mt-1">Klik untuk memperbesar</p>
+                                    </div>
+                                @endif
+                            </div>
+                            <p class="text-xs text-blue-600 mt-3 italic">* Thumbnail foto penanganan kejadian sebelum dan sesudah</p>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('admin.reports.status', $report->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                         @csrf
                         <div>
                             <label class="block text-sm font-medium text-gray-600 mb-2">Ubah Status</label>
@@ -147,6 +225,51 @@
                                 <option value="selesai" {{ $report->status == 'selesai' ? 'selected' : '' }}>Selesai
                                 </option>
                             </select>
+                        </div>
+
+                        <!-- Photo Upload Section -->
+                        <div class="space-y-4">
+                            <h4 class="text-md font-medium text-gray-900">Upload Foto Penanganan</h4>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Foto Sebelum Kejadian</label>
+                                    <input type="file" name="foto_sebelum" accept="image/*" id="fotoSebelumInput"
+                                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                                        onchange="previewImage(this, 'fotoSebelumPreview', 'fotoSebelumImg')">
+                                    <p class="text-xs text-gray-500 mt-1">Format yang didukung: JPG, PNG, GIF, WEBP. Maksimal 5MB</p>
+
+                                    <!-- Image Preview -->
+                                    <div id="fotoSebelumPreview" class="mt-3 hidden">
+                                        <label class="block text-sm font-medium text-gray-600 mb-2">Preview:</label>
+                                        <div class="bg-gray-50 p-3 rounded-md">
+                                            <img id="fotoSebelumImg" src="" alt="Preview sebelum"
+                                                class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 150px;">
+                                            <button type="button" onclick="removeImage('fotoSebelumInput', 'fotoSebelumPreview')"
+                                                class="mt-2 text-xs text-red-600 hover:text-red-800">Hapus Preview</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Foto Sesudah Kejadian</label>
+                                    <input type="file" name="foto_sesudah" accept="image/*" id="fotoSesudahInput"
+                                        class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+                                        onchange="previewImage(this, 'fotoSesudahPreview', 'fotoSesudahImg')">
+                                    <p class="text-xs text-gray-500 mt-1">Format yang didukung: JPG, PNG, GIF, WEBP. Maksimal 5MB</p>
+
+                                    <!-- Image Preview -->
+                                    <div id="fotoSesudahPreview" class="mt-3 hidden">
+                                        <label class="block text-sm font-medium text-gray-600 mb-2">Preview:</label>
+                                        <div class="bg-gray-50 p-3 rounded-md">
+                                            <img id="fotoSesudahImg" src="" alt="Preview sesudah"
+                                                class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 150px;">
+                                            <button type="button" onclick="removeImage('fotoSesudahInput', 'fotoSesudahPreview')"
+                                                class="mt-2 text-xs text-red-600 hover:text-red-800">Hapus Preview</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">

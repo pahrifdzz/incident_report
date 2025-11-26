@@ -18,6 +18,10 @@
                         <h1 class="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
                     </div>
                     <div class="flex items-center space-x-4">
+                        <a href="{{ route('admin.register.form') }}"
+                            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                            Register Admin
+                        </a>
                         <a href="{{ route('profile.edit') }}"
                             class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
                             Profile
@@ -185,32 +189,13 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                {{ $report->created_at ? \Carbon\Carbon::parse($report->created_at)->translatedFormat('d M Y, H:i') : '-' }}
+                                                {{ $report->created_at ? \Carbon\Carbon::parse($report->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('d M Y, H:i:s') . ' WIB' : '-' }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div
-                                                    class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                                                    <a href="{{ route('admin.reports.show', $report) }}"
-                                                        class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-medium py-1 px-3 rounded-md transition-colors">
-                                                        Lihat
-                                                    </a>
-                                                    <form action="{{ route('admin.reports.status', $report) }}"
-                                                        method="POST" class="inline">
-                                                        @csrf
-                                                        <select name="status" onchange="this.form.submit()"
-                                                            class="text-xs border border-gray-300 rounded-md px-2 py-1 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                                                            <option value="baru"
-                                                                {{ $report->status == 'baru' ? 'selected' : '' }}>Baru
-                                                            </option>
-                                                            <option value="proses"
-                                                                {{ $report->status == 'proses' ? 'selected' : '' }}>
-                                                                Proses</option>
-                                                            <option value="selesai"
-                                                                {{ $report->status == 'selesai' ? 'selected' : '' }}>
-                                                                Selesai</option>
-                                                        </select>
-                                                    </form>
-                                                </div>
+                                                <a href="{{ route('admin.reports.show', $report) }}"
+                                                    class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-medium py-1 px-3 rounded-md transition-colors">
+                                                    Lihat
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach

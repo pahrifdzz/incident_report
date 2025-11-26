@@ -125,10 +125,9 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-600 mb-1">Foto Pendukung *</label>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Foto Pendukung</label>
                                 <input type="file" name="foto" accept="image/*" id="fotoInput"
-                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                                    onchange="previewImage(this)" required>
+                                    class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500">
                                 <p class="text-xs text-gray-500 mt-1">Format yang didukung: JPG, PNG, GIF, WEBP.
                                     Maksimal 5MB</p>
 

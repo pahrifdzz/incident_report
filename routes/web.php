@@ -26,6 +26,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/reports/{report}', [AdminController::class, 'show'])->name('admin.reports.show');
     Route::post('/admin/reports/{report}/status', [AdminController::class, 'updateStatus'])->name('admin.reports.status');
     Route::get('/admin/export', [AdminController::class, 'exportExcel'])->name('admin.export');
+    Route::get('/admin/register', [AdminController::class, 'showRegisterForm'])->name('admin.register.form');
+    Route::post('/admin/register', [AdminController::class, 'register'])->name('admin.register');
 });
 
 Route::get('/lapor', [ReportController::class, 'create'])->name('report.create');
