@@ -191,11 +191,21 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                                 {{ $report->created_at ? \Carbon\Carbon::parse($report->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('d M Y, H:i:s') . ' WIB' : '-' }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                                 <a href="{{ route('admin.reports.show', $report) }}"
                                                     class="bg-gray-800 hover:bg-gray-700 text-white text-xs font-medium py-1 px-3 rounded-md transition-colors">
                                                     Lihat
                                                 </a>
+                                                <form method="POST" action="{{ route('admin.reports.destroy', $report) }}"
+                                                    class="inline-block"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus laporan ini? Semua data dan gambar terkait akan dihapus permanen.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="bg-red-600 hover:bg-red-700 text-white text-xs font-medium py-1 px-3 rounded-md transition-colors">
+                                                        Hapus
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

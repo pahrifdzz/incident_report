@@ -20,6 +20,10 @@ class Report extends Model
         'status_kejadian', // Tambahkan field untuk status kejadian
         'foto',
         'cloudinary_public_id', // Tambahkan field untuk Cloudinary public ID
+        'foto_sebelum',
+        'foto_sesudah',
+        'cloudinary_public_id_sebelum',
+        'cloudinary_public_id_sesudah',
         'status',
     ];
 }

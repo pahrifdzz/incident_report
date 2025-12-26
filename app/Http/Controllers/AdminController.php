@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use App\Models\User;
-use App\Services\CloudinaryService;
+use App\Services\LocalStorageService;
 use App\Exports\ReportsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -84,20 +84,20 @@ class AdminController extends Controller
 
             // Handle foto sebelum upload
             if ($request->hasFile('foto_sebelum')) {
-                $cloudinaryService = new CloudinaryService();
-                $uploadResult = $cloudinaryService->uploadImage($request->file('foto_sebelum'), 'reports');
+                $localStorageService = new LocalStorageService();
+                $uploadResult = $localStorageService->uploadImage($request->file('foto_sebelum'), 'reports');
 
                 if ($uploadResult['success']) {
-                    $updateData['foto_sebelum'] = $uploadResult['secure_url'];
-                    $updateData['cloudinary_public_id_sebelum'] = $uploadResult['public_id'];
+                    $updateData['foto_sebelum'] = $uploadResult['public_url'];
+                    $updateData['cloudinary_public_id_sebelum'] = $uploadResult['path'];
 
-                    Log::info('Foto sebelum kejadian uploaded to Cloudinary', [
+                    Log::info('Foto sebelum kejadian uploaded to local storage', [
                         'report_id' => $report->id,
-                        'public_id' => $uploadResult['public_id'],
-                        'url' => $uploadResult['secure_url']
+                        'path' => $uploadResult['path'],
+                        'url' => $uploadResult['public_url']
                     ]);
                 } else {
-                    Log::error('Failed to upload foto sebelum kejadian to Cloudinary', [
+                    Log::error('Failed to upload foto sebelum kejadian to local storage', [
                         'report_id' => $report->id,
                         'error' => $uploadResult['error']
                     ]);
@@ -107,20 +107,20 @@ class AdminController extends Controller
 
             // Handle foto sesudah upload
             if ($request->hasFile('foto_sesudah')) {
-                $cloudinaryService = new CloudinaryService();
-                $uploadResult = $cloudinaryService->uploadImage($request->file('foto_sesudah'), 'reports');
+                $localStorageService = new LocalStorageService();
+                $uploadResult = $localStorageService->uploadImage($request->file('foto_sesudah'), 'reports');
 
                 if ($uploadResult['success']) {
-                    $updateData['foto_sesudah'] = $uploadResult['secure_url'];
-                    $updateData['cloudinary_public_id_sesudah'] = $uploadResult['public_id'];
+                    $updateData['foto_sesudah'] = $uploadResult['public_url'];
+                    $updateData['cloudinary_public_id_sesudah'] = $uploadResult['path'];
 
-                    Log::info('Foto sesudah kejadian uploaded to Cloudinary', [
+                    Log::info('Foto sesudah kejadian uploaded to local storage', [
                         'report_id' => $report->id,
-                        'public_id' => $uploadResult['public_id'],
-                        'url' => $uploadResult['secure_url']
+                        'path' => $uploadResult['path'],
+                        'url' => $uploadResult['public_url']
                     ]);
                 } else {
-                    Log::error('Failed to upload foto sesudah kejadian to Cloudinary', [
+                    Log::error('Failed to upload foto sesudah kejadian to local storage', [
                         'report_id' => $report->id,
                         'error' => $uploadResult['error']
                     ]);
@@ -178,6 +178,57 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             Log::error('AdminController::showRegisterForm - Error: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat memuat form registrasi.');
+        }
+    }
+
+    /**
+     * Menghapus laporan dan file gambar terkait
+     * Clean Code: Clear method name, proper error handling
+     */
+    public function destroy(Report $report)
+    {
+        try {
+            $localStorageService = new LocalStorageService();
+
+            // Hapus foto laporan utama
+            if ($report->cloudinary_public_id) {
+                $localStorageService->deleteImage($report->cloudinary_public_id);
+                Log::info('Foto laporan utama dihapus', [
+                    'report_id' => $report->id,
+                    'path' => $report->cloudinary_public_id
+                ]);
+            }
+
+            // Hapus foto sebelum kejadian
+            if ($report->cloudinary_public_id_sebelum) {
+                $localStorageService->deleteImage($report->cloudinary_public_id_sebelum);
+                Log::info('Foto sebelum kejadian dihapus', [
+                    'report_id' => $report->id,
+                    'path' => $report->cloudinary_public_id_sebelum
+                ]);
+            }
+
+            // Hapus foto sesudah kejadian
+            if ($report->cloudinary_public_id_sesudah) {
+                $localStorageService->deleteImage($report->cloudinary_public_id_sesudah);
+                Log::info('Foto sesudah kejadian dihapus', [
+                    'report_id' => $report->id,
+                    'path' => $report->cloudinary_public_id_sesudah
+                ]);
+            }
+
+            // Hapus record dari database
+            $report->delete();
+
+            Log::info('Laporan berhasil dihapus', [
+                'report_id' => $report->id,
+                'nama_pelapor' => $report->nama_pelapor
+            ]);
+
+            return redirect()->route('admin.dashboard')->with('success', 'Laporan berhasil dihapus!');
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus laporan: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menghapus laporan.');
         }
     }
 

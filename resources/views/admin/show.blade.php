@@ -68,7 +68,7 @@
                                 <label class="block text-sm font-medium text-gray-600 mb-1">NIK</label>
                                 <p class="text-sm text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $report->nik }}</p>
                             </div>
-                        </div>
+                        </div>~
 
                         <!-- Report Details -->
                         <div class="space-y-4">
@@ -244,7 +244,8 @@
                                         <label class="block text-sm font-medium text-gray-600 mb-2">Preview:</label>
                                         <div class="bg-gray-50 p-3 rounded-md">
                                             <img id="fotoSebelumImg" src="" alt="Preview sebelum"
-                                                class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 150px;">
+                                                class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 150px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                            <p class="hidden text-red-500 text-xs">Gagal memuat preview gambar</p>
                                             <button type="button" onclick="removeImage('fotoSebelumInput', 'fotoSebelumPreview')"
                                                 class="mt-2 text-xs text-red-600 hover:text-red-800">Hapus Preview</button>
                                         </div>
@@ -263,7 +264,8 @@
                                         <label class="block text-sm font-medium text-gray-600 mb-2">Preview:</label>
                                         <div class="bg-gray-50 p-3 rounded-md">
                                             <img id="fotoSesudahImg" src="" alt="Preview sesudah"
-                                                class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 150px;">
+                                                class="max-w-full h-auto rounded-lg shadow-sm" style="max-width: 150px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                            <p class="hidden text-red-500 text-xs">Gagal memuat preview gambar</p>
                                             <button type="button" onclick="removeImage('fotoSesudahInput', 'fotoSesudahPreview')"
                                                 class="mt-2 text-xs text-red-600 hover:text-red-800">Hapus Preview</button>
                                         </div>
@@ -301,7 +303,8 @@
                 </button>
             </div>
             <div class="p-4">
-                <img id="modalImage" src="" alt="Preview" class="max-w-full h-auto rounded-lg">
+                <img id="modalImage" src="" alt="Preview" class="max-w-full h-auto rounded-lg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <p id="imageError" class="hidden text-red-500 text-center">Gagal memuat gambar. URL mungkin tidak valid.</p>
             </div>
         </div>
     </div>
@@ -309,7 +312,11 @@
     <script>
         // Image modal functions
         function openImageModal(imageUrl) {
-            document.getElementById('modalImage').src = imageUrl;
+            const modalImage = document.getElementById('modalImage');
+            const errorMsg = document.getElementById('imageError');
+            modalImage.src = imageUrl;
+            modalImage.style.display = 'block';
+            errorMsg.style.display = 'none';
             document.getElementById('imageModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
@@ -332,6 +339,37 @@
                 closeImageModal();
             }
         });
+
+        // Image preview functions
+        function previewImage(input, previewDivId, imgId) {
+            const file = input.files[0];
+            const previewDiv = document.getElementById(previewDivId);
+            const img = document.getElementById(imgId);
+            const errorMsg = img.nextElementSibling;
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    errorMsg.style.display = 'none';
+                    previewDiv.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewDiv.classList.add('hidden');
+            }
+        }
+
+        function removeImage(inputId, previewDivId) {
+            document.getElementById(inputId).value = '';
+            const previewDiv = document.getElementById(previewDivId);
+            const img = previewDiv.querySelector('img');
+            const errorMsg = img.nextElementSibling;
+            img.style.display = 'block';
+            errorMsg.style.display = 'none';
+            previewDiv.classList.add('hidden');
+        }
     </script>
 </body>
 
