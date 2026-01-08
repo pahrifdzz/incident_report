@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pelaporan Kejadian - Incident Report</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('css/style_offline.css') }}">
 </head>
 
 <body class="bg-gray-50">
@@ -17,19 +17,9 @@
                     <div class="flex items-center">
                         <h1 class="text-xl font-semibold text-gray-900">Form Pelaporan Kejadian</h1>
                     </div>
-                    {{-- <div class="flex items-center space-x-4">
-                        <a href="{{ route('profile.edit') }}"
-                            class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                            Profile
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit"
-                                class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                Logout
-                            </button>
-                        </form>
-                    </div> --}}
+                    <div class="flex items-center">
+                        <a href="{{ url('/') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Kembali</a>
+                    </div>
                 </div>
             </div>
         </nav>

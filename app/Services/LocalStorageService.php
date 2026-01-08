@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class LocalStorageService
 {
-    private $storagePath = 'aset';
+    private $storagePath = '';
 
     /**
      * Upload image to local storage dengan optimasi
@@ -29,15 +29,15 @@ class LocalStorageService
 
             // Create folder if not exists
             $fullPath = $this->storagePath . '/' . $folder;
-            if (!Storage::disk('public')->exists($fullPath)) {
-                Storage::disk('public')->makeDirectory($fullPath);
+            if (!Storage::disk('foto')->exists($fullPath)) {
+                Storage::disk('foto')->makeDirectory($fullPath);
             }
 
             // Store file
-            $path = $file->storeAs($fullPath, $filename, 'public');
+            $path = $file->storeAs($fullPath, $filename, 'foto');
 
             // Get public URL
-            $publicUrl = Storage::disk('public')->url($path);
+            $publicUrl = Storage::disk('foto')->url($path);
 
             Log::info('Local storage upload successful', [
                 'path' => $path,
@@ -70,8 +70,8 @@ class LocalStorageService
     public function deleteImage(string $path): array
     {
         try {
-            if (Storage::disk('public')->exists($path)) {
-                Storage::disk('public')->delete($path);
+            if (Storage::disk('foto')->exists($path)) {
+                Storage::disk('foto')->delete($path);
 
                 Log::info('Local storage delete successful', [
                     'path' => $path
@@ -107,7 +107,7 @@ class LocalStorageService
      */
     public function getPublicUrl(string $path): string
     {
-        return Storage::disk('public')->url($path);
+        return Storage::disk('foto')->url($path);
     }
 
     /**

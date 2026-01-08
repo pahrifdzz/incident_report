@@ -85,7 +85,7 @@ class AdminController extends Controller
             // Handle foto sebelum upload
             if ($request->hasFile('foto_sebelum')) {
                 $localStorageService = new LocalStorageService();
-                $uploadResult = $localStorageService->uploadImage($request->file('foto_sebelum'), 'reports');
+                $uploadResult = $localStorageService->uploadImage($request->file('foto_sebelum'), '');
 
                 if ($uploadResult['success']) {
                     $updateData['foto_sebelum'] = $uploadResult['public_url'];
@@ -108,7 +108,7 @@ class AdminController extends Controller
             // Handle foto sesudah upload
             if ($request->hasFile('foto_sesudah')) {
                 $localStorageService = new LocalStorageService();
-                $uploadResult = $localStorageService->uploadImage($request->file('foto_sesudah'), 'reports');
+                $uploadResult = $localStorageService->uploadImage($request->file('foto_sesudah'), '');
 
                 if ($uploadResult['success']) {
                     $updateData['foto_sesudah'] = $uploadResult['public_url'];

@@ -42,7 +42,7 @@ class ReportController extends Controller
             // Handle file upload ke local storage
             if ($request->hasFile('foto')) {
                 $localStorageService = new LocalStorageService();
-                $uploadResult = $localStorageService->uploadImage($request->file('foto'), 'reports');
+                $uploadResult = $localStorageService->uploadImage($request->file('foto'), '');
 
                 if ($uploadResult['success']) {
                     $localUrl = $uploadResult['public_url'];
